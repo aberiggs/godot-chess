@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://c2g054ua1m4al"]
+[gd_scene load_steps=3 format=3 uid="uid://tbu5csx1taxp"]
 
 [ext_resource type="Texture2D" uid="uid://kl1fptvlhv3i" path="res://assets/chess/black_king.png" id="1_8vtwt"]
 [ext_resource type="Script" path="res://scripts/king.gd" id="2_86d8q"]

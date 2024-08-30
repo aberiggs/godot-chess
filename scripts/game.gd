@@ -1,21 +1,26 @@
 extends Node2D
 
-var white_king_scene = preload("res://scenes/White_King.tscn")
-var black_king_scene = preload("res://scenes/Black_King.tscn")
+var piece_scenes = {
+    #'P': preload("res://scenes/White_Pawn.tscn"),
+    #'N': preload("res://scenes/White_Knight.tscn"),
+    #'B': preload("res://scenes/White_Bishop.tscn"),
+    #'R': preload("res://scenes/White_Rook.tscn"),
+    #'Q': preload("res://scenes/White_Queen.tscn"),
+    'K': preload("res://scenes/White_King.tscn"),
+    #'p': preload("res://scenes/Black_Pawn.tscn"),
+    #'n': preload("res://scenes/Black_Knight.tscn"),
+    #'b': preload("res://scenes/Black_Bishop.tscn"),
+    #'r': preload("res://scenes/Black_Rook.tscn"),
+    #'q': preload("res://scenes/Black_Queen.tscn"),
+    'k': preload("res://scenes/Black_King.tscn")
+}
 
 @onready var pieces_container = $PiecesContainer  # Adjust the path if needed
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-
-    var white_bitboard = 0b0000000000000000000000000000000000000000000000000000000000000000 # Example white bitboard
-    var black_bitboard = 0
-    print(black_bitboard + 0b1111111111101111111111110000000000000000111111111111111111111111) # Example black bitboard
-
-    # Add white pieces
-    add_pieces_from_bitboard(white_bitboard, true)
-    # Add black pieces
-    add_pieces_from_bitboard(black_bitboard, false)
+    var fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" # Starting pos
+    construct_board_from_fen(fen)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -27,51 +32,35 @@ func _input(event):
             if piece.is_position_under_cursor(get_global_mouse_position()):
                 var to = piece.board_position + Vector2(0, 1)
                 piece.move_to(to)
-                
-func get_bitboard(is_white: bool):
-    var bitboard: int = 0  # Initialize bitboard as a 64-bit integer (in Godot, `int` is 64-bit)
-    
-    for piece in pieces_container.get_children():
-        if piece.is_white != is_white:
-            continue # color doesn't match
-        # Calculate the bitboard index from the piece's position
-        var x = piece.board_position.x
-        var y = piece.board_position.y
-        
-        # Ensure coordinates are within bounds
-        if x >= 0 and x < 8 and y >= 0 and y < 8:
-            var index = y * 8 + x
-            bitboard |= (1 << index)  # Set the corresponding bit
-        else:
-            assert(false, "Bitboard has coord out of bounds")
-            
-    
-    return bitboard
-
-func add_pieces_from_bitboard(bitboard: int, is_white: bool):
+       
+func legal_moves():
+    return []
+         
+func construct_board_from_fen(fen: String) -> void:
     # Clear the old board
     for piece in pieces_container.get_children():
-        if piece.is_white == is_white:
-            pieces_container.remove_child(piece)
+        pieces_container.remove_child(piece)
     
-    for index in range(64):  # 64 squares on a chessboard
-        if bitboard & (1 << index):  # Check if the bit at `index` is set
-            var x = index % 8
-            var y = index / 8
-            
-            # Instantiate the appropriate piece based on color
-            var piece_scene = white_king_scene if is_white else black_king_scene
-            var piece = piece_scene.instantiate(PackedScene.GEN_EDIT_STATE_INSTANCE)
-            
-            # Set the piece's color
-            piece.is_white = is_white
-            
-            # Set the position of the piece
-            piece.move_to(Vector2(x,y))
-            
-            # Add the piece to the container
-            pieces_container.add_child(piece)
-        
+    # Extract the board part from the FEN string
+    var board_part = fen.split(" ")[0]
+    
+    # Iterate through each row of the board
+    var rows = board_part.split("/")
+    for row_index in range(8):
+        var row = rows[row_index]
+        var col_index = 0
+        for char in row:
+            if char.is_valid_int():
+                # Empty squares
+                col_index += int(char)
+            else:
+                # Place piece
+                var piece_scene = piece_scenes.get(char, null)
+                if piece_scene:
+                    var piece = piece_scene.instantiate(PackedScene.GEN_EDIT_STATE_INSTANCE)
+                    piece.move_to(Vector2(col_index, 7 - row_index))
+                    pieces_container.add_child(piece)
+                col_index += 1
     
     
         
