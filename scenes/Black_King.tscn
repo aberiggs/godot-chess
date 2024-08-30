@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://cu1gcmc5jvg2p"]
+
+[ext_resource type="Texture2D" uid="uid://kl1fptvlhv3i" path="res://assets/chess/black_king.png" id="1_cx7xd"]
+[ext_resource type="Script" path="res://scripts/king.gd" id="2_egpq3"]
+
+[node name="Sprite2D" type="Sprite2D"]
+texture_filter = 1
+texture = ExtResource("1_cx7xd")
+script = ExtResource("2_egpq3")

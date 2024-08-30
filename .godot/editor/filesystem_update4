@@ -1,0 +1,10 @@
+res://scenes/Black_Queen.tscn
+res://scripts/chess_piece.gd
+res://scenes/White_Queen.tscn
+res://scenes/game.tscn
+res://scenes/White_King.tscn
+res://scenes/Black_King.tscn
+res://scripts/queen.gd
+res://scripts/king.gd
+res://scenes/game.gd
+res://scripts/game.gd

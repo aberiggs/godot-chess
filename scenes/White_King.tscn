@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://dn8tqqt0ie0xn"]
+
+[ext_resource type="Texture2D" uid="uid://bhhffo3aqgl1x" path="res://assets/chess/white_king.png" id="1_ehn6t"]
+[ext_resource type="Script" path="res://scripts/king.gd" id="2_7bxxi"]
+
+[node name="WhiteQueen" type="Node2D"]
+script = ExtResource("2_7bxxi")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("1_ehn6t")
